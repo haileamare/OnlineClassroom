@@ -1,3 +1,4 @@
+
 const renderHTML = ({ appString }) => `
   <!DOCTYPE html>
   <html lang="en">
