@@ -1,0 +1,7 @@
+{
+    "verbose": false,
+    "watch": [
+        "./server"
+    ],
+    "exec": "bun build:client && bun build:server && node ./dist/server.generated.js"
+}

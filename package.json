@@ -1,0 +1,51 @@
+{
+  "name": "mern_classroom",
+  "module": "main.js",
+  "scripts": {
+    "build:client": "webpack --mode=development --config webpack.config.client.js",
+    "build:server": "webpack --mode=development --config webpack.config.server.js",
+    "development": "nodemon"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "react-refresh": "^0.14.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/material": "^6.1.8",
+    "@mui/styles": "^6.1.8",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@swc/core": "^1.9.3",
+    "babel-loader": "^9.2.1",
+    "body-parser": "^1.20.3",
+    "browserslist": "^4.24.2",
+    "css-loader": "^7.1.2",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.24.0",
+    "express": "^4.21.1",
+    "file-loader": "^6.2.0",
+    "mongoose": "^8.8.2",
+    "nodemon": "^3.1.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hot-loader": "^4.13.1",
+    "react-router-dom": "^7.0.1",
+    "sass-loader": "^16.0.3",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "uglify-js": "^3.19.3",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-hot-middleware": "^2.26.1",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
