@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import crypto from 'crypto'
+
+
 const UserSchema=new mongoose.schema({
   name:{
     type:String,
@@ -22,10 +24,6 @@ const UserSchema=new mongoose.schema({
   },
   salt:{
     type:String
-  },
-  photo:{
-    data:Buffer,
-    contentTypeS:String
   },
   educator:{
     type:Boolean,
@@ -71,3 +69,5 @@ UserSchema.path('hashed_password').validate(function(){
     this.invalidate('password','password is required un path')
   }
 },null)
+
+export default  mongoose.model('User',UserSchema)
