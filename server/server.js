@@ -1,6 +1,6 @@
 import expressApp from './express';
 import config from '../config/config.js'
-import mongoose from 'mongooose'
+import mongoose from 'mongoose'
 const server = expressApp;
 const PORT = process.env.PORT || 3000;
 
@@ -11,7 +11,7 @@ server.listen(PORT, () => {
 
 mongoose.Promise=global.Promise;
 
-mongoose.connect(config.mongoUri,{
+mongoose.connect(config.mongoUrl,{
   useNewUrlParser:true,
   useUnifiedTopology:true
 })
