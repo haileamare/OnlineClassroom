@@ -1,10 +1,11 @@
 
-const renderHTML = ({ appString }) => `
+const renderHTML = ({ appString,css }) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
       <title>MERN Classroom</title>
+      <style id="jss-server-side">${css}</style>
     </head>
     <body>
       <div id="root">${appString}</div>

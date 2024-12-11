@@ -1,8 +1,7 @@
 import User from "../models/user.model";
 import dbErrorHanlder from '../helpers/dbErrorHanlder.js'
-import { isConstructorDeclaration } from "typescript";
-
-
+import extend from 'lodash/extend'
+import {IncomingForm} from 'formidable'
 
 const create = async (req, res) => {
     const user = new User(req.body);
@@ -22,11 +21,11 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        const users = User.find().select('name email updated created')
+        const users =await User.find().select('name email  created')
         res.json(users)
     } catch (err) {
         res.status(400).json({
-            error: errorHandler.getErrorMessage(err)
+            error: 'dbErrorHanlder.getErrorMessage(err)'
         })
     }
 }
@@ -59,6 +58,7 @@ const remove = async (req, res) => {
         let deletedUser = await User.findByIdAndDelete(user._id)
         deletedUser.hashed_password = undefined;
         deletedUser.salt = undefined
+        
         res.json(deletedUser)
     } catch (err) {
         console.log('error remove')
@@ -70,19 +70,26 @@ const remove = async (req, res) => {
 
 }
 const update = async (req, res) => {
-    try {
-        let user = req.profile
-        extend(user, req.body)
-        user.save()
-        user.hashed_password = undefined
-        user.salt = undefined
-        return res.json(user)
+    const form=new IncomingForm()
+    form.keepExtensions=true
 
-    } catch (err) {
-        return res.status(401).json({
-            error: err
-        })
-    }
+   form.parse(req,(err,fields,files)=>{
+     try{
+        let user=req.profile
+        console.log('fields',fields)
+        if(Array.isArray(fields.name)) fields.name=fields.name[0]
+        if(Array.isArray(fields.email)) fields.email=fields.email[0]
+        if(Array.isArray(fields.password)) fields.password=fields.password[0]
+        if(Array.isArray(fields.educator)) fields.educator=fields.educator[0]
+        extend(user,fields)
+        user.save()
+        res.json(user)
+     }catch(err){
+          res.status(400).json({
+            error:err
+          })
+     }
+})
 }
 const photo = async (req, res) => {
 

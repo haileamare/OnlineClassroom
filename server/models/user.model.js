@@ -42,10 +42,7 @@ UserSchema.virtual('password')
 
 UserSchema.methods = {
   authenticate: function(plainText) {
-    console.log("Authenticating password:", plainText);
-    console.log("Hashed password from DB:", this.hashed_password);
-    console.log("Salt:", this.salt);
-    console.log("Hashed password to compare:", this.encryptPassword(plainText));
+   
     return this.encryptPassword(plainText) === this.hashed_password;
   },
   encryptPassword: function(password) {
