@@ -1,46 +1,56 @@
-import { isConstructorDeclaration } from "typescript"
-import { signout } from "./api-auth"
+import React, { createContext, useContext, useState } from 'react';
+import { signout } from './api-auth';
 
-const authenticate=(jwt,cb)=>{
-  if(typeof window !== 'undefined'){
-    //console.log('are you setting jwt')
-    sessionStorage.setItem('jwt',JSON.stringify(jwt))
-   // console.log(sessionStorage.getItem('jwt'))
+const AuthContext = createContext();
+
+const isAuthenticated = () => {
+  if (typeof window === 'undefined') return false;
+  if (sessionStorage.getItem('jwt')) {
+    return JSON.parse(sessionStorage.getItem('jwt'));
+  } else {
+    return false;
   }
-  cb()
-}
-const isAuthenticated=()=>{
-    if(typeof window ==='undefined')
-        return false
-    if(sessionStorage.getItem('jwt')){
-       // console.log('hellow jwt',sessionStorage.getItem('jwt'))
-        return JSON.parse(sessionStorage.getItem('jwt'))
+};
+
+const AuthProvider = ({ children }) => {
+  const [auth, setAuth] = useState(isAuthenticated());
+
+  const authenticate = (jwt, cb) => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('jwt', JSON.stringify(jwt));
+      setAuth(jwt);
     }
-    else
-      return false
-}
-const clearJWT=(cb)=>{
-    if(typeof window !=='undefined')
-        sessionStorage.removeItem('jwt')
+    cb();
+  };
 
-    signout().then((data)=>{
-        document.cookie = "t=; expires=Thu, 01 jan 1970 00:00:00 UTC path=/"
-    })
-    cb()
-}
+  const clearJWT = (cb) => {
+    if (typeof window !== 'undefined') sessionStorage.removeItem('jwt');
+    signout().then((data) => {
+      document.cookie = "t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+      setAuth(false);
+    });
+    cb();
+  };
 
-const updateUser=(data,cb)=>{
-    try{
-        if(typeof window !== 'undefined'){
-           const auth=JSON.parse(sessionStorage.getItem('jwt'))
-           console.log('authuser',auth)
-           auth.user=data
-           sessionStorage.setItem('jwt',JSON.stringify(auth))
-           cb()
-        }
-
-    }catch(err){
-        console.log('update User auth error',err)
+  const updateUser = (data, cb) => {
+    try {
+      if (typeof window !== 'undefined') {
+        const auth = JSON.parse(sessionStorage.getItem('jwt'));
+        auth.user = data;
+        authenticate(auth, cb);
+      }
+    } catch (err) {
+      console.log('update User auth error', err);
     }
-}
-export {clearJWT,isAuthenticated,authenticate,updateUser}
+  };
+
+  return (
+    <AuthContext.Provider value={{ auth, authenticate, clearJWT, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+const useAuth = () => useContext(AuthContext);
+
+export { AuthProvider, useAuth };

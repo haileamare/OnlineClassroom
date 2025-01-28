@@ -4,18 +4,22 @@ import { makeStyles } from '@mui/styles'
 import HomeIcon from '@mui/icons-material/Home'
 import { School } from '@mui/icons-material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { clearJWT, isAuthenticated, updateUser } from '../auth/auth-helper';
-
+//import { clearJWT, isAuthenticated, updateUser } from '../auth/auth-helper';
+import { useAuth } from '../auth/auth-helper';
 //import { keyframes } from '@mui/system';
 //import theme from '../theme'
 
 
 
 export const useStyles = makeStyles((theme) => ({
+  '@global':{
+     '@import': [ "url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap')"],
+  },
   appBar: {
     background: theme.palette.customColors.lightGreen,
-    display: 'flex !important',
+    display: 'flex ',
     color: 'white',
+    zIndex:1,
     padding: '.6rem 1rem',
     fontSize: '1rem',
     margin: 'auto',
@@ -179,10 +183,177 @@ export const useStyles = makeStyles((theme) => ({
     background:'red',
     color:'red',
     alignSelf:'center'
-  }
+  },
+  actions:{
+     display:'flex',
+     justifyContent:'center',
+     alignItems:'center'
+  },
+  cardCourse:{
+    zIndex:10,
+    position:'absolute',
+    width:'100%',
+    top:theme.spacing(0),
+    paddingLeft:theme.spacing(1.5),
+    paddingRight:theme.spacing(1.5),
+    display:'grid',
+    gridTemplateColumns:'repeat(3,1fr)',
+    gridTemplateRows:'auto auto auto auto',
+    gridTemplateAreas:' "cardHeader cardHeader cardHeader " "courseDesc courseDesc courseDesc" "addLesson addLesson addLesson" "lessonList lessonList lessonList"',
+    gap:theme.spacing(1),
+   
+  },
+  addLesson:{
+    gridArea:'addLesson',
+    display:'grid',
+    background:'',
+    gridTemplateColumns:'1fr 200px',
+    padding:theme.spacing(1),
+    maxHeight:'80px',
+    boxSizing:'border-box',
+    position:'relative',
+    borderTop:'solid 1px rgba(0,0,0,0.5)',
+    boxShadow:'0 -4px 6px -4px rgba(0, 0, 0, 0.5)',
+    '& div':{
+      display:'flex',
+      flexDirection:'column',
+      gap:'.6rem'
+    },
+    '& a':{
+         background:'rgba(0,0,0, .5)',
+         textWrap:'nowrap',
+         borderRadius:'0'
+         
+    }
+    
+  },
+  cardHeader:{
+    paddingTop:'0px',
+    paddingLeft:'0px',
+    gridArea:'cardHeader',
+    marginTop:theme.spacing(2),
+  },
+  titleTypo:{
+    fontFamily:"Roboto fantasy",
+    fontWeight:'bold',
+    fontSize:theme.spacing(3.5)
+  },
+  buttonCon:{
+    gridArea:'buttonCon',
+    background:'orange',
+  },
+  imageCard:{
+    backgroundSize:'cover',
+    backgroundRepeat:'no-repeat',
+    backgroundPositionX:'center',
+    backgroundPosition:'start',
+    maxHeight:'250px',
+    width:'100%',
+    background:'red',
+    margin:'0',
+    background:'red',
+    borderRadius:theme.spacing(1),
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    [theme.breakpoints.down('sm')]:{
+        gridColumn:'1',
+        gridRow:'1',
+        order:2
+    },
+    [theme.breakpoints.down('md')]:{
+      maxHeight:'200px',
+      gridColumn:'1/2',
+      gridRow:'1/2'
+    }      
+  },
+  courseDesc:{
+    margin:`${theme.spacing()} ${theme.spacing(0)}`,
+    padding:`${theme.spacing()} ${theme.spacing(20)} ${theme.spacing(20)} ${theme.spacing(2)}`,
+    gridArea:'courseDesc',
+    height:'250px',
+    background:'',
+    margin:'0',
+    display:'grid',
+    gap:theme.spacing(10),
+    gridTemplateColumns:'300px 1fr',
+    justifyItems:'start',
+    [theme.breakpoints.down('sm')]:{
+      gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',
+      gridTemplateRows:'auto auto',
+      height:'auto',
+      maxHeight:'200px',
+      padding:'0 auto',
+      gap:theme.spacing(3),
+      
+    },
+    [theme.breakpoints.down('md')]:{
+      gap:theme.spacing(5),
+      height:'auto',
+      maxHeight:'400px'
+    }
+  },
+  courseTypo:{
+
+    [theme.breakpoints.down('md')]:{
+      fontSize:theme.spacing(1.5),
+      fontFamily:'Roboto san-serif',
+      textWrap:'wrap',
+      gridColumn:'2/3',
+      background:'red',
+      gridRow:'1/2',
+      width:'auto',
+      height:'auto'
+    },
+    [theme.breakpoints.down('sm')]:{
+      fontSize:theme.spacing(1.5),
+  
+    },
+  },
+  imageList:{
+    display: 'flex',
+    flexWrap:'wrap',
+    gap: "1rem",
+    background: "",
+    [theme.breakpoints.down('sm')]:{
+      flexDirection:'column-reverse'
+    }
+    
+  },
+  listImage:{
+     background: 'red', 
+     marginBottom: '0',
+     flex:'1' ,
+     aspectRatio:2/1,
+     [theme.breakpoints.down('sm')]:{
+      height:'80px'
+     }
+  },
+  listText:{
+    marginTop: '0',
+    flex:'3',
+    [theme.breakpoints.down('sm')]:{
+      gridColumn:'auto-fit',
+      background:'orange',
+      '&::-webkit-scrollbar':{
+      width:'1rem',
+      color:'red'
+    },
+    '&::-webkit-scrollbar-thumb':{
+      backgroundColor:'red',
+      borderRadius:theme.spacing(3),
+
+    },
+    },
+  },
+lessonList:{
+  gridArea:'lessonList',
+  background:'',
+  height:'250px',
+  maxHeight:'250px'
+},
 }))
 
 export default function Menu() {
+  const {auth,authenticate,clearJWT,updateUser}=useAuth()
   const location=useLocation()
   const navigate=useNavigate()
   const classes = useStyles()
@@ -192,7 +363,7 @@ export default function Menu() {
        
     })
   }
- // console.log('auhth',isAuthenticated().user._id)
+
   return (
     <AppBar className={classes.appBar} >
       <Toolbar className={classes.toolBar} component='h3'>
@@ -208,17 +379,17 @@ export default function Menu() {
         <Button className={classes.navButtons} component={Link} to='/users'>
           users
         </Button>
-        {isAuthenticated() && updateUser().educator(<IconButton className={classes.navButtons}>
+        {auth && auth.user.educator && (<IconButton className={classes.navButtons} component={Link} to='/seller/courses'>
           <School />TEACH
         </IconButton>)}
-        {isAuthenticated() && (<span style={{display:'flex',flexDirection:'row'}}>
-        <Button className={classes.navButtons} component={Link} to={'/user/'+isAuthenticated().user._id}>My Profile</Button>
+        {auth && (<span style={{display:'flex',flexDirection:'row'}}>
+        <Button className={classes.navButtons} component={Link} to={'/user/'+auth.user._id}>My Profile</Button>
         <Button className={classes.navButtons} onClick={handleSignout}>
           Sign out
         </Button> 
         </span>)}
 
-        {!isAuthenticated() && (<span> <Button className={classes.navButtons} component={Link} to='/signin'>
+        {!auth && (<span> <Button className={classes.navButtons} component={Link} to='/signin'>
           Sign in
         </Button>
           <Button className={classes.navButtons} component={Link} to='/signup'>

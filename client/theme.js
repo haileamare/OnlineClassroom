@@ -26,6 +26,16 @@ const theme=createTheme({
         openTitle:'#3f4771',
         protectedTitle:pink[400],
         type:'light'
-    }
+    },
+    breakpoints: {
+         values: { 
+            xs: 0,
+            sm: 600,
+            md: 930,
+            lg: 1280, 
+            xl: 1920, 
+            custom1: 1500,
+         }
+        },
 })
 export default theme

@@ -31,6 +31,7 @@ const list = async (req, res) => {
 }
 
 const userByID = async (req, res, next, id) => {
+
     try {
         const user = await User.findById(id)
         if (!user) {
@@ -38,6 +39,7 @@ const userByID = async (req, res, next, id) => {
                 error: 'User not found'
             })
         }
+        
         req.profile = user
         next()
     } catch (err) {
@@ -81,6 +83,7 @@ const update = async (req, res) => {
         if(Array.isArray(fields.email)) fields.email=fields.email[0]
         if(Array.isArray(fields.password)) fields.password=fields.password[0]
         if(Array.isArray(fields.educator)) fields.educator=fields.educator[0]
+       
         extend(user,fields)
         user.save()
         res.json(user)
@@ -91,8 +94,14 @@ const update = async (req, res) => {
      }
 })
 }
-const photo = async (req, res) => {
-
+const isEducator=(req,res,next)=>{
+    const isEducator=req.profile && req.profile.educator
+    if(!isEducator){
+        return res.status(403).json({
+            error:"User is not an educator"
+        })
+    }
+    next()
 }
 
-export default { remove,userByID, create, list, read, update }
+export default { isEducator,remove,userByID, create, list, read, update }

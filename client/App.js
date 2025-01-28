@@ -5,6 +5,7 @@ import Menu from './core/Menu';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter } from 'react-router-dom';
 import MainRouter from './MainRouter';
+import { AuthProvider } from './auth/auth-helper';
 
 const App = () => {
   React.useEffect(() => {
@@ -23,6 +24,7 @@ const App = () => {
         <Menu />
         <MainRouter /> {/* Ensure that MainRouter is included */}
       </ThemeProvider>
+
   );
 };
 

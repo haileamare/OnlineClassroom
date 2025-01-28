@@ -57,7 +57,19 @@ const config = {
         hot: true,
         open: true,
         historyApiFallback: true
-    }
+    }, 
+    resolve: {
+        fallback: {
+          crypto: require.resolve('crypto-browserify'),
+          buffer: require.resolve('buffer/'),
+          stream: require.resolve('stream-browserify'),
+          util: require.resolve('util/'),
+          url: require.resolve('url/'),
+          vm: require.resolve('vm-browserify'),
+          path: require.resolve('path-browserify'),
+          os: require.resolve('os-browserify/browser'),
+        }
+      },
 };
 
 module.exports = config;

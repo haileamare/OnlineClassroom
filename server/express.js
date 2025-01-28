@@ -16,13 +16,14 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import devBundle from './devBundle.js';
 import MainRouter from '../client/MainRouter.js';
-
+import courseRoutes from './routes/course.routes.js'
+import { AuthProvider } from '../client/auth/auth-helper.js';
 dotenv.config();
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit:'50mb'}));
+app.use(bodyParser.urlencoded({ extended: true,limit:'50mb' }));
 
 if (process.env.NODE_ENV === 'development') {
   devBundle(app);
@@ -32,6 +33,7 @@ app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
 app.use(cookieParser());
 app.use('/', userRoutes);
 app.use('/', authRoutes);
+app.use('/',courseRoutes)
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets();
@@ -40,9 +42,12 @@ app.get('*', (req, res) => {
   const appString = renderToString(
     sheets.collect(
       <StaticRouter location={req.url} context={context}>
-        <ThemeProvider theme={theme}>
+        <AuthProvider>
+         <ThemeProvider theme={theme}>
           <App/>
         </ThemeProvider>
+        </AuthProvider>
+
       </StaticRouter>
     )
   );

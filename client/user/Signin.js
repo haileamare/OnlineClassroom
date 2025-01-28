@@ -3,8 +3,8 @@ import { useStyles } from '../core/Menu';
 import { Button, Card, CardActions, CardContent, Grid, Grid2, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { signin } from '../auth/api-auth';
-import { authenticate } from '../auth/auth-helper';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../auth/auth-helper';
 
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -32,7 +32,9 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(4)
 
 }))
+
 export default function Signin(props) {
+    const {authenticate,auth}=useAuth()
     const [values, setValues] = useState({
         email: "",
         password: "",

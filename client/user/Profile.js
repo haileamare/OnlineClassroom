@@ -3,11 +3,13 @@ import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListI
 import { Edit, Lock, Person } from '@mui/icons-material';
 import { useStyles } from '../core/Menu';
 import { Link, useParams } from 'react-router-dom';
-import { isAuthenticated } from '../auth/auth-helper';
+//import { isAuthenticated } from '../auth/auth-helper';
 import { read } from './api-user';
 import { useTheme } from '@emotion/react';
+import { useAuth } from '../auth/auth-helper';
 
 export default function (){
+  const {auth}=useAuth()
     const [values,setValues]=useState({
         user:{},
         error:''
@@ -15,7 +17,7 @@ export default function (){
     const classes=useStyles()
     const userId=useParams()
     const theme=useTheme()
-    const jwtToken=isAuthenticated()
+    const jwtToken=auth
    
      useEffect(()=>{
       const abortController=new AbortController()
@@ -43,7 +45,7 @@ export default function (){
                 <List dense>
                      <ListItem 
                      secondaryAction={
-                        <IconButton component={Link} to={'/user/edit/'+isAuthenticated().user._id}>
+                        <IconButton component={Link} to={'/user/edit/'+auth.user._id}>
                             <Edit/>
                         </IconButton>
                      }

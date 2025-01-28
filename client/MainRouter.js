@@ -7,6 +7,9 @@ import User from './user/Users';
 import Profile from './user/Profile';
 import EditProfile from './user/EditProfile'
 import PrivateRoute from './auth/PrivaetRoute'
+import MyCourse from './course/MyCourses'
+import NewCourse from './course/NewCourse'
+import Course from './course/Course'
 const MainRouter=()=>{
     return (
         <div>
@@ -17,8 +20,11 @@ const MainRouter=()=>{
                 <Route path='/users' Component={User}/>
                 <Route path='/user/:userId' Component={Profile}/>
                 <Route path='/user/edit/:userId' element={<PrivateRoute element={EditProfile}/>}/>
+                <Route path='/seller/courses' element={<PrivateRoute element={MyCourse}/>}/>
+                <Route path='/user/NewCourse' Component={NewCourse}/>
+                <Route path='/teach/course/:courseId' Component={Course}/>
             </Routes>
         </div>
     )
-}
+} 
 export default MainRouter

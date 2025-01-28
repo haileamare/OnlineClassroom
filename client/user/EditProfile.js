@@ -2,13 +2,12 @@ import React ,{useEffect,useState,useRef}from 'react'
 import {Button, Card, CardActions, CardContent, FormControlLabel, Switch, TextField, ToggleButton, ToggleButtonGroup, Typography} from '@mui/material'
 import { useStyles } from '../core/Menu'
 import { StyledTextField } from './Signin'
-import { isConstructorDeclaration } from 'typescript'
 import { update } from './api-user'
 import { useParams } from 'react-router-dom'
-import { isAuthenticated, updateUser } from '../auth/auth-helper'
-
+import {  useAuth } from '../auth/auth-helper'
 
 export default function EditProfile(){
+    const {auth,updateUser}=useAuth()
     const [values,setValues]=useState({
         name:'',
         email:'',
@@ -20,7 +19,7 @@ export default function EditProfile(){
     const [dimensions,setDimensions]=useState({})
     const buttonRef=useRef()
     const {userId}=useParams()
-    const jwt=isAuthenticated()
+    const jwt=auth
     const classes=useStyles()
     const classesButton=useStyles(dimensions)
     
@@ -29,15 +28,14 @@ export default function EditProfile(){
       values.name && formData.append('name',values.name)
       values.email && formData.append('email',values.email)
      values.password && formData.append('password',values.password)
-      values.educator && formData.append('educator',values.educator)
-    
-     console.log('values',values)
+      formData.append('educator',values.educator)
+      
       update({userId},{t:jwt.token},formData).then((data)=>{
         if(data.error){
             console.log('dataerr',data.error)
             setValues({...values,error:data.error})
         }else{
-            console.log('data',data)
+            
             updateUser(data,()=>{
                 setValues({...values,user:data})
             })
@@ -50,7 +48,7 @@ export default function EditProfile(){
     }
    
     const handleMouseEnter=(event)=>{
-        console.log('event',event.pageY,'offset',buttonRef.current.offsetLeft)
+        //.log('event',event.pageY,'offset',buttonRef.current.offsetLeft)
         if(buttonRef.current){
             let width=event.pageX-buttonRef.current.offsetLeft
             let height=event.pageY-buttonRef.current.offsetTop

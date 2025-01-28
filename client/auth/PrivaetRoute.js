@@ -1,9 +1,10 @@
 import React from 'react'
-import { isAuthenticated } from './auth-helper'
+//import { isAuthenticated } from './auth-helper'
 import { Navigate } from 'react-router-dom'
-
+import { useAuth } from './auth-helper'
 const PrivateRoute=({element:Element,...rest})=>(
-    isAuthenticated()?(
+
+    useAuth().auth?(
         <Element {...rest}/>
     ):(
         <Navigate to={{
