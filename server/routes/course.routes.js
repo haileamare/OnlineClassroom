@@ -33,6 +33,11 @@ router.route('/api/courses/:courseId')
 // Route for course photo
 router.route('/api/course/photo')
   .get(courseCtrl.getCourse, courseCtrl.photo, courseCtrl.defaultPhoto);
-
+router.route('/api/deleteCourse/:courseId')
+.delete(authCtrl.requireSignin,courseCtrl.isInstructor,
+  courseCtrl.remove
+)
+router.route('teach/course/edit/:courseId')
+.put(authCtrl.requireSignin,courseCtrl.isInstructor,courseCtrl.update)
 
 export default router;

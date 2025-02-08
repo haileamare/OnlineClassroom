@@ -318,8 +318,7 @@ export const useStyles = makeStyles((theme) => ({
     }
     
   },
-  listImage:{
-     background: 'red', 
+  listImage:{ 
      marginBottom: '0',
      flex:'1' ,
      aspectRatio:2/1,
@@ -350,6 +349,86 @@ lessonList:{
   height:'250px',
   maxHeight:'250px'
 },
+flex:{
+  display:'flex',
+  gap:theme.spacing(2),
+  paddingTop:theme.spacing(2),
+  [theme.breakpoints.down('sm')]:{
+    flexDirection:'column',
+    
+  }
+},
+cardImage:{
+width:'390px',
+height:'300px',
+objectFit:'contain'
+},
+details:{
+ //height:'300px',
+ width:'90%',
+ [theme.breakpoints.down('sm')]:{
+  height:'auto',
+   width:'100%'
+ },
+ '& .MuiTextField-root':{
+  '& fieldset':{
+    border:'none',
+    borderBottom:'solid 1px black'
+  },
+  '& label':{
+    color:'red',
+    //transform:'none'
+    transform:'translate(14px,-6px) scale(1)'
+  },
+  '& .MuiOutlinedInput-root':{
+      padding:theme.spacing(4),
+      
+  },
+    width:'100%',
+    marginBottom:theme.spacing(3)
+ }
+},
+
+editCourse:{
+   padding:'0',
+   '& .MuiTextField-root':{
+    height:'60px',
+    marginBottom:theme.spacing(1.4),
+    marginTop:theme.spacing(0.7),
+    marginRight:theme.spacing(0),
+    width:'90%',
+    '& .MuiOutlinedInput-root':{
+      padding:theme.spacing(1)
+    },
+     '& fieldset':{
+      border:'none',
+      borderBottom:'solid 1px black',
+      padding:theme.spacing(3)
+     },
+     '& label':{
+      padding:'0',
+      fontSize:theme.spacing(1.8),
+      color:'red',
+      top:'0',
+      transform:'none'
+    },
+    },
+  },
+  lessonsList:{
+    '& .MuiTextField-root':{
+      '& fieldset':{
+         border:'none',
+         borderBottom:'solid 1px black',
+      },
+      '& label':{
+        color:'black',
+        fontSize:theme.spacing(2.4)
+      },
+    },
+    '& .MuiOutlinedInput-root':{
+      paddingBottom:theme.spacing(0.1)
+    }
+  }
 }))
 
 export default function Menu() {

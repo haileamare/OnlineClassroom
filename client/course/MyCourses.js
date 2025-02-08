@@ -72,7 +72,7 @@ export default function () {
                                         sx={{
                                             width: '100%',
                                             height:'100%',
-                                            borderRadius: "0",
+                                            borderRadius: "10px",
                                             margin:'0',
                                             backgroundSize:'contain'
 

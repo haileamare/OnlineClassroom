@@ -10,6 +10,7 @@ import PrivateRoute from './auth/PrivaetRoute'
 import MyCourse from './course/MyCourses'
 import NewCourse from './course/NewCourse'
 import Course from './course/Course'
+import EditCourse from './course/EditCourse';
 const MainRouter=()=>{
     return (
         <div>
@@ -23,6 +24,7 @@ const MainRouter=()=>{
                 <Route path='/seller/courses' element={<PrivateRoute element={MyCourse}/>}/>
                 <Route path='/user/NewCourse' Component={NewCourse}/>
                 <Route path='/teach/course/:courseId' Component={Course}/>
+                <Route path='/teach/course/edit/:courseId' element={<PrivateRoute element={EditCourse}/>}/>
             </Routes>
         </div>
     )

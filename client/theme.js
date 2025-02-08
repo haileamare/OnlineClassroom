@@ -7,7 +7,8 @@ const theme=createTheme({
             light:'#5c67a3',
             main:'#90EE90',
             dark:'#2e355b',
-            contrastText:'#fff'
+            contrastText:'#fff',
+            
         },
         secondary:{
             light:'#ff79b0',
@@ -17,6 +18,8 @@ const theme=createTheme({
         customColors:{
           lightGreen:'#24ed8f',
           lightOrange:'#db4458',
+          lightGray:'#D3D3D3',
+          llightGray:'hsl(0, 0%, 96%)',
           gradientGreen:'linear-gradient(90deg,#0162c8,#55e7fc)',
           gradientPink:'linear-gradient(90deg,#755bea,#ff72c0)',
           blue:'#0c1bf2',

@@ -6,7 +6,7 @@ import defaultImage from './../../client/assets/default.jpg'
 const create=(req,res)=>{
  let form=new IncomingForm()
  form.keepExtensions=true
- console.log('haile amare')
+ 
  form.parse(req, async(err,fields,files)=>{
      if(err){
         return res.status(400).json({
@@ -37,6 +37,44 @@ const create=(req,res)=>{
          })
      }
  })
+}
+const update=async(req,res)=>{
+  let form= new IncomingForm()
+  form.keepExtensions=true
+  form.parse(req, async(err,fields,files)=>{
+    
+    if(err){
+        return res.status(400).json({
+            error:"Photo could not be upload"
+        })
+    }
+    let course=req.course
+    console.log('files',files)
+    
+    if(Array.isArray(fields.name))fields.name=fields.name[0]
+    if(Array.isArray(fields.category))fields.category=fields.category[0]
+    if(Array.isArray(fields.description)) fields.description=fields.description[0]
+    if(Array.isArray(files.image)) files.image=files.image[0]
+    
+    course=extend(course,fields)
+    if(fields.lessons){
+        console.log('lessonform',fields.lessons)
+        course.lessons=JSON.parse(fields.lessons)
+    }
+    course.updated=Date.now()
+    if(fields.image){
+        course.image.data=fs.readFileSync(files.image.filepath)
+        course.image.contentType=files.image.mimetype
+    }
+    try{
+       await course.save()
+       res.json(course)
+    }catch(err){
+      return res.status(400).json({
+        error:dbErrorHanlder.getErrorMessage(err)
+      })
+    }
+  })
 }
 const listByInstructor=async(req,res)=>{
     try{
@@ -142,4 +180,16 @@ const isInstructor=(req,res,next)=>{
    
     next()
 }
-export default {isInstructor,newLesson,read,courseByID,photo,defaultPhoto,getCourse,listByInstructor,create}
+const remove=async (req,res)=>{
+    try{
+        let course=req.course
+        let deleteCourse=await course.remove()
+        res.json(deleteCourse)
+       
+    }catch(err){
+      return res.status(400).json({
+        error:dbErrorHanlder.getErrorMessage(err)
+      })
+    }
+}
+export default {remove,isInstructor,newLesson,read,courseByID,photo,defaultPhoto,getCourse,update,listByInstructor,create}

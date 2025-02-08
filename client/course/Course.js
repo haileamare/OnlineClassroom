@@ -1,18 +1,20 @@
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { read } from './api-course';
+import { deleteCourse, read } from './api-course';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../auth/auth-helper';
 import { useTheme } from '@emotion/react';
 import { useStyles } from '../core/Menu';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import NewLesson from './NewLesson';
+import DeleteCourse from './DeleteCourse';
 export default function Course() {
   const [values, setValues] = useState({
     error: '',
     courseData: {},
   });
   const [open, setOpen] = useState(false);
+  const [delopen,setDelOpen]=useState(false)
   const { courseId } = useParams(); // Fix useParams usage
   const { auth } = useAuth();
   const theme = useTheme();
@@ -22,11 +24,25 @@ export default function Course() {
   const addLesson = (course) => {
     setValues({ ...values, courseData: course });
   };
-  
+  const handleDelete=()=>{
+    setDelOpen((prev)=>!prev)
+  }
   const addLessonButton = () => {
     setOpen((prev) => !prev);
   };
-
+ 
+  const removeCourse=()=>{
+    deleteCourse({courseId:courseId},{t:auth.token})
+    .then((data)=>{
+      if(data.error){
+        alert(data.error)
+        setValues({...values,error:data.error})
+      }else{
+        alert(data)
+        setValues({...values,courseData:data})
+      }
+    })
+  }
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -43,12 +59,13 @@ export default function Course() {
 
     return () => abortController.abort();
   }, [courseId]); // Ensure correct dependency
-
+  
   return (
     <Card className={classes.cardCourse} data-label='cardCourse'>
       {open && auth.user._id === values.courseData.instructor?._id && (
         <NewLesson courseId={courseId} addLesson={addLesson} setOpen={setOpen} />
       )}
+      {delopen && <DeleteCourse course={values?.courseData} onRemove={removeCourse} setDelOpen={setDelOpen} />}
       <CardHeader
         className={classes.cardHeader}
         title={<Typography variant='h6' className={classes.titleTypo}>{values.courseData?.name || 'Loading...'}</Typography>}
@@ -64,13 +81,15 @@ export default function Course() {
           <div className={classes.butonCon}>
             {auth.user._id && auth.user._id === values.courseData.instructor?._id && (
               <span>
-                <IconButton sx={{ color: theme.palette.customColors.lightOrange }}>
-                  <Edit />
+                <IconButton sx={{ color: theme.palette.customColors.lightOrange }}
+                component={Link} to={`/teach/course/edit/`+courseId}>
+                  <Edit  />
                 </IconButton>
                 <Button sx={{ background: theme.palette.customColors.lightOrange, color: theme.palette.primary.contrastText }}>
                   Publish
                 </Button>
-                <IconButton sx={{ color: theme.palette.customColors.lightOrange }}>
+                <IconButton sx={{ color: theme.palette.customColors.lightOrange }} 
+                onClick={handleDelete}>
                   <Delete />
                 </IconButton>
               </span>
@@ -79,7 +98,13 @@ export default function Course() {
         }
       />
       <CardContent className={classes.courseDesc}>
-        <img className={classes.imageCard} src={imageUrl} title={values.courseData?.name || 'Course'} />
+        {/* <img className={classes.imageCard} src={imageUrl} title={values.courseData?.name || 'Course'} /> */}
+        <CardMedia
+            component="img"
+            image={imageUrl}
+            title={values.courseData?.name}
+            style={{ height: '300px',width:'120%'}} // Ensure height is defined
+          />
         <Typography variant="body1" className={classes.courseTypo}>
           {values.courseData?.description || 'No description available'}
         </Typography>
