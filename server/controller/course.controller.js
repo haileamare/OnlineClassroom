@@ -1,149 +1,150 @@
 import Course from '../models/course.model'
-import {IncomingForm} from 'formidable'
+import { IncomingForm } from 'formidable'
 import fs from 'fs'
 import dbErrorHanlder from '../helpers/dbErrorHanlder'
 import defaultImage from './../../client/assets/default.jpg'
-const create=(req,res)=>{
- let form=new IncomingForm()
- form.keepExtensions=true
- 
- form.parse(req, async(err,fields,files)=>{
-     if(err){
-        return res.status(400).json({
-            error:`Image could not be uploaded ${err}`
-        })
-     }
-     console.log('fields',fields)
-     console.log('files',files)
-     if(Array.isArray(fields.name))fields.name=fields.name[0]
-     if(Array.isArray(fields.category))fields.category=fields.category[0]
-     if(Array.isArray(fields.description)) fields.description=fields.description[0]
-     if(Array.isArray(files.image)) files.image=files.image[0]
+import extend from 'lodash/extend'
+const create = (req, res) => {
+    let form = new IncomingForm()
+    form.keepExtensions = true
 
-     let course =new Course(fields)
-     course.instructor=req.profile
-
-     if(files.image){
-        course.image.data=fs.readFileSync(files.image.filepath)
-        course.image.contentType=files.image.mimetype
-     }
-     try{
-        let result=await course.save()
-        res.json(result)
-     }catch(err){
-        console.log('error',err)
-         return res.status(400).json({
-            error:dbErrorHanlder.getErrorMessage(err)
-         })
-     }
- })
-}
-const update=async(req,res)=>{
-  let form= new IncomingForm()
-  form.keepExtensions=true
-  form.parse(req, async(err,fields,files)=>{
-    
-    if(err){
-        return res.status(400).json({
-            error:"Photo could not be upload"
-        })
-    }
-    let course=req.course
-    console.log('files',files)
-    
-    if(Array.isArray(fields.name))fields.name=fields.name[0]
-    if(Array.isArray(fields.category))fields.category=fields.category[0]
-    if(Array.isArray(fields.description)) fields.description=fields.description[0]
-    if(Array.isArray(files.image)) files.image=files.image[0]
-    
-    course=extend(course,fields)
-    if(fields.lessons){
-        console.log('lessonform',fields.lessons)
-        course.lessons=JSON.parse(fields.lessons)
-    }
-    course.updated=Date.now()
-    if(fields.image){
-        course.image.data=fs.readFileSync(files.image.filepath)
-        course.image.contentType=files.image.mimetype
-    }
-    try{
-       await course.save()
-       res.json(course)
-    }catch(err){
-      return res.status(400).json({
-        error:dbErrorHanlder.getErrorMessage(err)
-      })
-    }
-  })
-}
-const listByInstructor=async(req,res)=>{
-    try{
-        const courses=await Course.find({instructor:req.profile._id})
-        .populate('instructor','_id name')
-        res.json(courses)
-    }catch(err){
-        console.log('eshi man')
-        return res.status(400).json({
-         error:err
-        })
-    }
-}
-
-const courseByID=async(req,res,next)=>{
-    try{
-        let course=await Course.findById({_id:req.params.courseId})
-        .populate('instructor','_id name')
-        if(!course){
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
             return res.status(400).json({
-                error:'course not found'
+                error: `Image could not be uploaded ${err}`
             })
         }
-     
-        req.course=course
-        next()
-    }catch(err){
-        return  res.status(400).json({
-            error:'under the course by id'
+        console.log('fields', fields)
+        console.log('files', files)
+        if (Array.isArray(fields.name)) fields.name = fields.name[0]
+        if (Array.isArray(fields.category)) fields.category = fields.category[0]
+        if (Array.isArray(fields.description)) fields.description = fields.description[0]
+        if (Array.isArray(files.image)) files.image = files.image[0]
+
+        let course = new Course(fields)
+        course.instructor = req.profile
+
+        if (files.image) {
+            course.image.data = fs.readFileSync(files.image.filepath)
+            course.image.contentType = files.image.mimetype
+        }
+        try {
+            let result = await course.save()
+            res.json(result)
+        } catch (err) {
+            console.log('error', err)
+            return res.status(400).json({
+                error: dbErrorHanlder.getErrorMessage(err)
+            })
+        }
+    })
+}
+const update = async (req, res) => {
+    let form = new IncomingForm()
+    form.keepExtensions = true
+    form.parse(req, async (err, fields, files) => {
+
+        if (err) {
+            return res.status(400).json({
+                error: "Photo could not be upload"
+            })
+        }
+        let course = req.course
+        console.log('files', files)
+
+        if (Array.isArray(fields.name)) fields.name = fields.name[0]
+        if (Array.isArray(fields.category)) fields.category = fields.category[0]
+        if (Array.isArray(fields.description)) fields.description = fields.description[0]
+        if (Array.isArray(files.image)) files.image = files.image[0]
+        if (Array.isArray(fields.published)) fields.published = fields.published[0]
+        course = extend(course, fields)
+        if (fields.lessons) {
+            console.log('lessonform', fields.lessons)
+            course.lessons = JSON.parse(fields.lessons)
+        }
+        course.updated = Date.now()
+        if (fields.image) {
+            course.image.data = fs.readFileSync(files.image.filepath)
+            course.image.contentType = files.image.mimetype
+        }
+        try {
+            await course.save()
+            res.json(course)
+        } catch (err) {
+            return res.status(400).json({
+                error: dbErrorHanlder.getErrorMessage(err)
+            })
+        }
+    })
+}
+const listByInstructor = async (req, res) => {
+    try {
+        const courses = await Course.find({ instructor: req.profile._id })
+            .populate('instructor', '_id name')
+        res.json(courses)
+    } catch (err) {
+        console.log('eshi man')
+        return res.status(400).json({
+            error: err
         })
     }
 }
 
-const read=async(req,res)=>{
-   
-    req.course.image=undefined
+const courseByID = async (req, res, next) => {
+    try {
+        let course = await Course.findById({ _id: req.params.courseId })
+            .populate('instructor', '_id name')
+        if (!course) {
+            return res.status(400).json({
+                error: 'course not found'
+            })
+        }
+
+        req.course = course
+        next()
+    } catch (err) {
+        return res.status(400).json({
+            error: 'under the course by id'
+        })
+    }
+}
+
+const read = async (req, res) => {
+
+    req.course.image = undefined
     return res.json(req.course)
 }
-const getCourse=async(req,res,next)=>{
-   try{
-     console.log('get course')
-     let course=await Course.findOne({_id:req.query.courseId})
-     if(!course){
-        return res.status(400).json({
-            error:'course not found bro'
-        })
-     }
-     req.image=course
-     
-     next()
+const getCourse = async (req, res, next) => {
+    try {
+        console.log('get course')
+        let course = await Course.findOne({ _id: req.query.courseId })
+        if (!course) {
+            return res.status(400).json({
+                error: 'course not found bro'
+            })
+        }
+        req.image = course
 
-   }catch(err){
+        next()
+
+    } catch (err) {
         return res.status(400).json({
-            error:err
+            error: err
         })
-   }
+    }
 }
 
-const photo=(req,res,next)=>{
-  const course=req.image??''
-  if(course){
-    res.set('contentType',req.image.image.contentType)
-    return res.send(req.image.image.data)
-  }
-  next()
+const photo = (req, res, next) => {
+    const course = req.image ?? ''
+    if (course) {
+        res.set('contentType', req.image.image.contentType)
+        return res.send(req.image.image.data)
+    }
+    next()
 }
 
-const defaultPhoto=(req,res)=>{
- return res.sendFile(process.cwd()+defaultImage)
+const defaultPhoto = (req, res) => {
+    return res.sendFile(process.cwd() + defaultImage)
 }
 const newLesson = async (req, res) => {
     try {
@@ -156,8 +157,8 @@ const newLesson = async (req, res) => {
             { $push: { lessons: lesson } }, // Push the lesson into the course's lessons array
             { new: true }
         )
-        .populate('instructor', '_id name')
-        .exec();
+            .populate('instructor', '_id name')
+            .exec();
 
         res.json(result);
     } catch (err) {
@@ -168,28 +169,40 @@ const newLesson = async (req, res) => {
     }
 };
 
-const isInstructor=(req,res,next)=>{
-    const isInstructor=req.auth && req.course && req.course.instructor._id==req.auth._id
+const isInstructor = (req, res, next) => {
+    const isInstructor = req.auth && req.course && req.course.instructor._id == req.auth._id
+    console.log('instructor')
+    if (!isInstructor) {
 
-    if(!isInstructor){ 
-      
         return res.status(403).json({
-        error:"instructor not authorized"
-    })
+            error: "instructor not authorized"
+        })
     }
-   
+
     next()
 }
-const remove=async (req,res)=>{
-    try{
-        let course=req.course
-        let deleteCourse=await course.remove()
+const remove = async (req, res) => {
+    try {
+        let course = req.course
+        let deleteCourse = await course.remove()
         res.json(deleteCourse)
-       
-    }catch(err){
-      return res.status(400).json({
-        error:dbErrorHanlder.getErrorMessage(err)
-      })
+
+    } catch (err) {
+        return res.status(400).json({
+            error: dbErrorHanlder.getErrorMessage(err)
+        })
     }
 }
-export default {remove,isInstructor,newLesson,read,courseByID,photo,defaultPhoto,getCourse,update,listByInstructor,create}
+const listPublished = async (req, res) => {
+    try {
+        let courses = await Course.find({ published: true })
+            .populate('instructor', '_id name')
+            .exec()
+        res.json(courses)
+    } catch (err) {
+         return res.status(400).json({
+            error:err+'i think there '
+         })
+    }
+}
+export default { listPublished, remove, isInstructor, newLesson, read, courseByID, photo, defaultPhoto, getCourse, update, listByInstructor, create }

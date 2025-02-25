@@ -45,7 +45,7 @@ const read=async (signal,params,credentials)=>{
 }
 
 const update=async(params,credentials,data)=>{
-    console.log('userData',data)
+  
     try{
         let response=await fetch('/api/users/'+params.userId,{
             method:"PUT",

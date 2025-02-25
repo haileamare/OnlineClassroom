@@ -67,18 +67,20 @@ const newLesson = async (params, credentials, lesson) => {
     }
 }
 const update = async ({ courseId }, credentials, courseData) => {
+    
     try {
 
         let response = await fetch('/teach/course/edit/' + courseId, {
-            method: PUT,
-            header: {
-                'Authorization': 'Bearer ' + credentials.t
+            method: 'PUT',
+            headers:{
+                'Accept':'application/json',
+                'Authorization':'Bearer ' +credentials.t
             },
             body: courseData
         })
-        return response.json()
+        return await response.json()
     } catch (err) {
-        console.log(err)
+        console.log('err',err)
     }
 }
 const deleteCourse = async ({ courseId }, credentials) => {
@@ -100,5 +102,19 @@ const deleteCourse = async ({ courseId }, credentials) => {
         console.error('Error deleting:', err);
     }
 };
+const listPublished=async (signal)=>{
+    try{
+  let response=await fetch('/api/courses/published',{
+    method:'GET',
+    headers:{
+        'Content-Type':'application/json',
+    },
+    signal:signal
+  })
 
-export { deleteCourse, update, newLesson, read, create, listByInstructor }
+  return await response.json()
+}catch(err){
+    console.log(err,'error published courses')
+}
+}
+export { listPublished,deleteCourse, update, newLesson, read, create, listByInstructor }

@@ -1,15 +1,27 @@
-import { Card, CardContent, Typography } from '@mui/material'
-import React from 'react'
-export default function Home(){
+import React, { useEffect ,useState} from 'react'
+import Courses from '../course/Courses'
+import { listPublished } from '../course/api-course'
+export default function Home() {
+    const [course, setCourse] = useState({})
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+        listPublished(signal).then((data) => {
+            if (data && data.error) {
+                console.log('whatatat',data.error)
+            } else {
+                console.log('dataa',data)
+                setCourse(data)
+            }
+        })
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, [])
+   
     return (
         <div>
-            <Card>
-                <CardContent>
-                    <Typography component='h2'>
-                        WellCome to This Page
-                    </Typography>
-                </CardContent>
-            </Card>
+            <Courses courses={course} />
         </div>
     )
 }
