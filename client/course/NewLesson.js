@@ -28,7 +28,7 @@ export default function NewLesson(props){
             content:values.content || undefined,
             resource_url:values.resource_url || undefined
         }
-        console.log('lesson',lesson)
+       
         newLesson({
             courseId:props?.courseId
         },{

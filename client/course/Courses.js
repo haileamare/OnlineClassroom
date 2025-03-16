@@ -39,56 +39,74 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '300px', // Fixed height for all images
     objectFit: 'cover',
+    [theme.breakpoints.down('sm')]:{
+      height:'200px',
+      width:'100%'
+    }
   },
 }));
 
-export default function Courses({ courses }) {
+export default function Courses({ Courses,common }) {
   const { auth } = useAuth();
   const classes = useStyles();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-
+ 
+  console.log('coursess',Courses)
   // Check if courses is an array
-  if (!Array.isArray(courses)) {
-    console.error('Courses is not an array:', courses);
+  if (!Array.isArray(Courses)) {
+   // console.error('Courses is not an array:', courses);
     return <div>Error: Courses is not an array.</div>;
   }
 
   // Check if courses array is empty
-  if (courses.length === 0) {
+  if (Courses.length === 0) {
     console.warn('Courses array is empty.');
     return <div>No courses available.</div>;
   }
 
+  const findCommon=(course)=>{
+    console.log('white')
+    if(common?.length==0) return true
+    console.log('nigga')
+    return common?.find((enrolled)=>{
+      return enrolled.course._id===course._id?false:true
+    })
+  }
   return (
     <div className={classes.container}>
       <ImageList
         className={classes.imageList}
         cols={isSmallDevice ? 1 : 3}
-        gap={isSmallDevice ? theme.spacing(2) : theme.spacing(2)}
+        gap={isSmallDevice ? parseInt(theme.spacing(2)) :parseInt(theme.spacing(2))}
         rowHeight={300}
       >
-        {courses.map((course) => (
-          <ImageListItem key={course._id}>
-            <Link to={'/course/' + course._id}>
-              <img
-                className={classes.image}
-                src={`/api/course/photo?courseId=${course._id}`}
-                alt={course.name}
+        {Courses.map((course) => (
+         
+            findCommon(course) &&
+            ( <ImageListItem key={course._id}>
+              
+              <Link to={'/teach/course/' + course._id}>
+                <img
+                  className={classes.image}
+                  src={`/api/course/photo?courseId=${course._id}`}
+                  alt={course.name}
+                  loading='lazy'
+                />
+              {course.name}
+              </Link>
+              <ImageListItemBar
+                className={classes.imageListItemBar}
+                title={<Link to={'/teach/course/' + course._id}>{course.name}</Link>}
+                subtitle={<span>{course.category}</span>}
+                actionIcon={
+                  auth ? (
+                    <Enroll courseId={course._id} />
+                  ) : (
+                    <Link to={'/signin'}>Sign in to Enroll</Link>
+                  )
+                }
               />
-            </Link>
-            <ImageListItemBar
-              className={classes.imageListItemBar}
-              title={<Link to={'/course/' + course._id}>{course.name}</Link>}
-              subtitle={<span>{course.category}</span>}
-              actionIcon={
-                auth ? (
-                  <Enroll courseId={course._id} />
-                ) : (
-                  <Link to={'/signin'}>Sign in to Enroll</Link>
-                )
-              }
-            />
-          </ImageListItem>
+            </ImageListItem>)
         ))}
       </ImageList>
     </div>
@@ -96,5 +114,5 @@ export default function Courses({ courses }) {
 }
 
 Courses.propTypes = {
-  courses: PropTypes.array.isRequired,
+  Courses: PropTypes.array.isRequired,
 };

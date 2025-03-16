@@ -461,6 +461,7 @@ export default function Menu() {
         {auth && auth.user.educator && (<IconButton className={classes.navButtons} component={Link} to='/seller/courses'>
           <School />TEACH
         </IconButton>)}
+        { auth && !auth.user.educator && (<Button className={classes.navButtons}>EnrolledCoureses</Button>)}
         {auth && (<span style={{display:'flex',flexDirection:'row'}}>
         <Button className={classes.navButtons} component={Link} to={'/user/'+auth.user._id}>My Profile</Button>
         <Button className={classes.navButtons} onClick={handleSignout}>

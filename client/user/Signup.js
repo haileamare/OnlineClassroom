@@ -21,7 +21,7 @@ export default function Signup() {
      const user={
         name:values.name || undefined,
         email:values.email || undefined,
-        password:values.email || undefined
+        password:values.password || undefined
      }
      create(user).then((data)=>{
         if(data.error){

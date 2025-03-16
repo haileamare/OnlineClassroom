@@ -116,9 +116,10 @@ const read = async (req, res) => {
 }
 const getCourse = async (req, res, next) => {
     try {
-        console.log('get course')
+       
         let course = await Course.findOne({ _id: req.query.courseId })
         if (!course) {
+            console.log('courseId',req.query.courseId)
             return res.status(400).json({
                 error: 'course not found bro'
             })

@@ -18,7 +18,7 @@ export default function (){
     const userId=useParams()
     const theme=useTheme()
     const jwtToken=auth
-   
+  
      useEffect(()=>{
       const abortController=new AbortController()
       const signal=abortController.signal
@@ -45,9 +45,10 @@ export default function (){
                 <List dense>
                      <ListItem 
                      secondaryAction={
-                        <IconButton component={Link} to={'/user/edit/'+auth.user._id}>
+                    
+                        auth.user._id == userId.userId ? <IconButton component={Link} to={'/user/edit/'+auth.user._id}>
                             <Edit/>
-                        </IconButton>
+                        </IconButton>:<div></div>
                      }
                      >
                         <ListItemAvatar className="">

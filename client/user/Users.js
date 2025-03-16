@@ -64,7 +64,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
                 {
                     users.map((item,i)=>(
                       <StyledDiv key={i}>
-                        <Link to='/user/${item._id}' key={i} className={classes.linkUsers} >
+                        <Link to={'/user/'+item._id} key={i} className={classes.linkUsers} >
                           <ListItem 
                            secondaryAction={
                             <IconButton edge="end">

@@ -1,11 +1,11 @@
 import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { deleteCourse, read, update } from './api-course';
+import { deleteCourse, enrollmentStats, read, update } from './api-course';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../auth/auth-helper';
 import { useTheme } from '@emotion/react';
 import { useStyles } from '../core/Menu';
-import { Add, Delete, Edit } from '@mui/icons-material';
+import { Add, Delete, Edit, People, TaskAlt, TaskAltTwoTone } from '@mui/icons-material';
 import NewLesson from './NewLesson';
 import DeleteCourse from './DeleteCourse';
 
@@ -22,6 +22,10 @@ export default function Course() {
     },
   });
   const [open, setOpen] = useState(false);
+  const [stats,setStats]=useState({
+    totalEnrolled:0,
+    totalCompleted:0
+  })
   const [delopen, setDelOpen] = useState(false);
   const [openPublish, setOpenPublish] = useState(false);
   const { courseId } = useParams();
@@ -96,6 +100,26 @@ export default function Course() {
 
     return () => abortController.abort();
   }, [courseId]);
+
+  useEffect(()=>{
+    const abortController =new AbortController()
+    const signal=abortController.signal
+
+    enrollmentStats({courseId:courseId},{
+      t:auth.token
+    },signal).then((data)=>{
+      if(data && data.error){
+        setValues({...values,error:data.error})
+      }else{
+        console.log('enrolledstat',data)
+        setStats(data)
+      }
+    })
+
+    return function cleanup(){
+      abortController.abort()
+    }
+  },[courseId])
   
   return (
     <Card className={classes.cardCourse} data-label="cardCourse">
@@ -160,14 +184,19 @@ export default function Course() {
                     </IconButton>
                   </>
                 ) : (
-                  <Button color="primary" variant="outlined">
+                  <div style={{display:'inline-flex',gap:theme.spacing(1),marginLeft:theme.spacing(1)}}>
+                   {stats.totalEnrolled}<People/>
+                   {stats.totalCompleted}<TaskAlt/>
+                  <Button color="primary" variant="outlined" >
                     Published
                   </Button>
+                 </div>
                 )}
               </span>
             )}
           </div>
         }
+       
       />
       <CardContent className={classes.courseDesc}>
         <CardMedia component="img" image={imageUrl} title={values.courseData.name} style={{ height: '300px', width: '120%' }} />
@@ -180,9 +209,9 @@ export default function Course() {
           <Typography variant="h6">Lessons</Typography>
           <Typography variant="p">{values.courseData.lessons.length } Lessons</Typography>
         </Box>
-        <IconButton onClick={addLessonButton}>
+      {auth && auth.user._id===values.courseData.instructor._id && ( <IconButton onClick={addLessonButton}>
           <Add /> New Lesson
-        </IconButton>
+        </IconButton>)}
       </Card>
       <List className={classes.lessonList}>
         {values.courseData.lessons.map((lesson, index) => (

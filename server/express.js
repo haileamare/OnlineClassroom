@@ -17,6 +17,7 @@ import path from 'path';
 import devBundle from './devBundle.js';
 import MainRouter from '../client/MainRouter.js';
 import courseRoutes from './routes/course.routes.js'
+import enrollmentRoutes from './routes/enrollment.routes.js'
 import { AuthProvider } from '../client/auth/auth-helper.js';
 dotenv.config();
 const app = express();
@@ -33,7 +34,8 @@ app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
 app.use(cookieParser());
 app.use('/', userRoutes);
 app.use('/', authRoutes);
-app.use('/',courseRoutes)
+app.use('/',courseRoutes);
+app.use('/',enrollmentRoutes)
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets();

@@ -117,4 +117,19 @@ const listPublished=async (signal)=>{
     console.log(err,'error published courses')
 }
 }
-export { listPublished,deleteCourse, update, newLesson, read, create, listByInstructor }
+const enrollmentStats=async(params,credentials,signal)=>{
+    try{
+        let response=await fetch('/api/enrollment/stats/'+params.courseId,{
+            method:'GET',
+            headers:{
+                'Authorization':'Bearer ' + credentials.t,
+                 'Content-Type':'application/json'
+            },
+            signal:signal
+        })
+        return await response.json();
+    }catch(err){
+      console.log('enrollmentStats',err)
+    }
+}
+export {enrollmentStats,listPublished,deleteCourse, update, newLesson, read, create, listByInstructor }
