@@ -14,7 +14,7 @@ const signin = async (req, res) => {
         }
 
         if (!user.authenticate(req.body.password)) {
-            console.log('false',req.body.password)
+            console.log('false',req.body.passw)
             return res.status(401).json({
                 error: "Password does not match"
             });

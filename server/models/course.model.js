@@ -41,5 +41,4 @@ const CourseSchema=new mongoose.Schema({
 
 })
 
-
 export default mongoose.model('Course',CourseSchema)

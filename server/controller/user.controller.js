@@ -97,6 +97,7 @@ const update = async (req, res) => {
 const isEducator=(req,res,next)=>{
     const isEducator=req.profile && req.profile.educator
     if(!isEducator){
+        
         return res.status(403).json({
             error:"User is not an educator"
         })

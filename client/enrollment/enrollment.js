@@ -13,62 +13,62 @@ import clsx from 'clsx';
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    marginTop: theme.spacing(8),
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    position: 'relative',
-    paddingTop:0
-  //  zIndex: -10, // Drawer positioned behind other content
-  },
-  drawerPaper: {
-    width: drawerWidth,
-    backgroundColor: '#616161',
-    top:theme.spacing(10.4),
-    paddingTop:0
-  },
-  toolbar: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    width: `calc(100% - ${drawerWidth}px)`,
-    position: 'relative'
-  },
-  selectedDrawer: {
-    backgroundColor: '#e9e3df',
-  },
-  unselected: {
-    backgroundColor: '#ffffff',
-  },
-   listItem:{
-    position:'absolute',
-    top:theme.spacing(-7),
-    padding:theme.spacing(2.5)
-   },
-  listItemText: {
-    paddingBlock: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  card: {
-    padding: '24px 40px 20px',
-    margin: '20px 0',
-  },
-  para: {
-    whiteSpace: 'pre-wrap',
-  },
-  avatar: {
-    color: '#9b9b9b',
-    border: '1px solid #bdbdbd',
-    background: 'none',
-  },
-  actionButton: {
-    marginTop: theme.spacing(2),
-  }
+    root: {
+        display: 'flex',
+        marginTop: theme.spacing(8),
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+        position: 'relative',
+        paddingTop: 0
+        //  zIndex: -10, // Drawer positioned behind other content
+    },
+    drawerPaper: {
+        width: drawerWidth,
+        backgroundColor: '#616161',
+        top: theme.spacing(10.4),
+        paddingTop: 0
+    },
+    toolbar: theme.mixins.toolbar,
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(1),
+        width: `calc(100% - ${drawerWidth}px)`,
+        position: 'relative'
+    },
+    selectedDrawer: {
+        backgroundColor: '#e9e3df',
+    },
+    unselected: {
+        backgroundColor: '#ffffff',
+    },
+    listItem: {
+        position: 'absolute',
+        top: theme.spacing(-7),
+        padding: theme.spacing(2.5)
+    },
+    listItemText: {
+        paddingBlock: theme.spacing(1),
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    card: {
+        padding: '24px 40px 20px',
+        margin: '20px 0',
+    },
+    para: {
+        whiteSpace: 'pre-wrap',
+    },
+    avatar: {
+        color: '#9b9b9b',
+        border: '1px solid #bdbdbd',
+        background: 'none',
+    },
+    actionButton: {
+        marginTop: theme.spacing(2),
+    }
 }));
 
 export default function Enrollment() {
@@ -148,7 +148,7 @@ export default function Enrollment() {
                 <div className={classes.toolbar} />
                 <List>
                     <ListItem button onClick={selectDrawer(-1)}
-                        className={values.drawer === -1 ? clsx(classes.selectedDrawer ,classes.listItem): clsx(classes.unselected,classes.listItem)}>
+                        className={values.drawer === -1 ? clsx(classes.selectedDrawer, classes.listItem) : clsx(classes.unselected, classes.listItem)}>
                         <ListItemIcon><Info /></ListItemIcon>
                         <ListItemText primary={"Course Overview"} />
                     </ListItem>
@@ -176,7 +176,7 @@ export default function Enrollment() {
                 </List>
                 <Divider />
             </Drawer>
-          { values.drawer !=-1 ? ( <main className={classes.content}>
+            {values.drawer != -1 ? (<main className={classes.content}>
                 <div className={classes.toolbar} />
                 {values.drawer !== -1 && (
                     <>
@@ -208,25 +208,25 @@ export default function Enrollment() {
                         </Card>
                     </>
                 )}
-            </main>):
-            (<main className={classes.content}>
-                <div className={classes.toolbar} />
-            
-                        <Typography variant="h5">{enrollment.course.name}</Typography>
-                        <Card className={classes.card}>
-                            <CardHeader
-                                title={"by"+enrollment.course.instructor.name|| "Lesson Title"}
-                            />
-                            <CardContent>
-                                <Typography variant="body1">
-                                    {enrollment.course.description}
-                                </Typography>
-                            </CardContent>
-                            
-                        </Card>
-                    
-            </main>)
-}
+            </main>) :
+                (<main className={classes.content}>
+                    <div className={classes.toolbar} />
+
+                    <Typography variant="h5">{enrollment.course.name}</Typography>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title={"by" + enrollment.course.instructor.name || "Lesson Title"}
+                        />
+                        <CardContent>
+                            <Typography variant="body1">
+                                {enrollment.course.description}
+                            </Typography>
+                        </CardContent>
+
+                    </Card>
+
+                </main>)
+            }
         </div>
     );
 }
